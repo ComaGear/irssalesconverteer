@@ -1,0 +1,16 @@
+target/
+target/classes/com/colbertlum/IrsSalesConverterApplication.class
+target/classes/com/colbertlum/IrsSalesReportContentHandler.class
+target/classes/com/colbertlum/IrsSalesReportContentHandler$1.class
+target/classes/com/colbertlum/IrsSalesReportContentHandler$dataType.class
+target/classes/com/colbertlum/SalesConverter.class
+target/classes/com/colbertlum/SalesConverter$1.class
+target/classes/com/colbertlum/SalesConverter$2.class
+target/classes/com/colbertlum/SuperMain.class
+target/classes/com/colbertlum/uomContentHandler.class
+target/classes/com/colbertlum/uomContentHandler$1.class
+target/classes/com/colbertlum/uomContentHandler$dataType.class
+target/classes/com/colbertlum/entity/MoveOut.class
+target/classes/com/colbertlum/entity/UOM.class
+target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+target/test-classes/contentHanderTest.class

@@ -40,6 +40,7 @@ public class IrsSalesReportContentHandler extends DefaultHandler {
     private String columString;
     private StringBuilder value;
     private DataFormatter dataFormatter;
+    private int columnPosition;
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
@@ -65,7 +66,8 @@ public class IrsSalesReportContentHandler extends DefaultHandler {
                                 this.formatIndex, this.formatString);
                     break;
                 case SSTINDEX:
-                    String sstIndex = value.toString();
+                    // String sstIndex = value.toString();
+                    String sstIndex = value.toString().replaceAll("\\D+","");
                     try {
                         RichTextString rts = sharedStringsTable.getItemAt(Integer.parseInt(sstIndex));
                         string = rts.toString();
@@ -93,6 +95,21 @@ public class IrsSalesReportContentHandler extends DefaultHandler {
             }
 
             Integer integer = -1;
+            // integer = this.columnPosition;
+            // switch (integer) {
+            //     case 0:
+            //         moveOut.setProductId(string);
+            //         break;
+            //     case 2:
+            //         moveOut.setUom(string);
+            //         break;
+            //     case 4:
+            //         moveOut.setQuantity(Float.parseFloat(string));
+            //         break;
+            //     default:
+            //         break;
+            // }
+            
             if (headerPosition.containsKey(columString))
                 integer = headerPosition.get(columString);
             switch (integer) {
@@ -108,7 +125,6 @@ public class IrsSalesReportContentHandler extends DefaultHandler {
                 default:
                     break;
             }
-            return;
         }
 
         if ("row".equals(qName)) {
@@ -142,6 +158,7 @@ public class IrsSalesReportContentHandler extends DefaultHandler {
                     break;
                 }
             }
+            // this.columnPosition = columnReferenceToPosition(references.substring(0, firstDigit));
             this.columString = references.substring(0, firstDigit);
 
             readingVDataType = dataType.NUMBER;
@@ -170,6 +187,16 @@ public class IrsSalesReportContentHandler extends DefaultHandler {
             this.moveOut = new MoveOut();
         }
     }
+
+    private int columnReferenceToPosition(String reference) {
+        int column = -1;
+        for (int i = 0; i < reference.length(); ++i) {
+            int c = reference.charAt(i);
+            column = (column + 1) * 26 + c - 'A';
+        }
+        return column;
+    }
+
 
     public IrsSalesReportContentHandler(SharedStrings sharedStrings, StylesTable stylesTable,
             ArrayList<MoveOut> moveOuts) {

@@ -182,6 +182,8 @@ public class IrsSalesConverterApplication extends Application {
             e.printStackTrace();
         }
 
+        System.out.println(moveOuts);
+
         SalesConverter converter = new SalesConverter();
 
         converter.convert(moveOuts, UOMs);
@@ -210,7 +212,8 @@ public class IrsSalesConverterApplication extends Application {
 
             // File file = new File(outputPath + outputFileNameStr + ".xlsx");
             
-            FileOutputStream fileOutputStream = new FileOutputStream(outputPath + "\\"+ outputFileNameStr + ".xlsx");
+            // FileOutputStream fileOutputStream = new FileOutputStream(outputPath + "\\"+ outputFileNameStr + ".xlsx");
+            FileOutputStream fileOutputStream = new FileOutputStream("C:\\Users\\comag\\Desktop\\" + outputFileNameStr + ".xlsx");
             workbook.write(fileOutputStream);
 
             fileOutputStream.close();
