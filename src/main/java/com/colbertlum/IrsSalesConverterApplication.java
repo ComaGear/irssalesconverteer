@@ -182,8 +182,6 @@ public class IrsSalesConverterApplication extends Application {
             e.printStackTrace();
         }
 
-        System.out.println(moveOuts);
-
         SalesConverter converter = new SalesConverter();
 
         converter.convert(moveOuts, UOMs);

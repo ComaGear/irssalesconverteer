@@ -14,3 +14,9 @@ target/classes/com/colbertlum/entity/MoveOut.class
 target/classes/com/colbertlum/entity/UOM.class
 target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
 target/test-classes/contentHanderTest.class
+target/classes/com/colbertlum/IrsSalesConverterApplication.class
+target/classes/com/colbertlum/IrsSalesReportContentHandler.class
+target/classes/com/colbertlum/IrsSalesReportContentHandler$dataType.class
+target/classes/com/colbertlum/IrsSalesReportContentHandler$1.class
+target/test-classes/contentHanderTest.class
+target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst

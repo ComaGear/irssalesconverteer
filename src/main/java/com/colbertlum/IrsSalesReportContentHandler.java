@@ -188,14 +188,14 @@ public class IrsSalesReportContentHandler extends DefaultHandler {
         }
     }
 
-    private int columnReferenceToPosition(String reference) {
-        int column = -1;
-        for (int i = 0; i < reference.length(); ++i) {
-            int c = reference.charAt(i);
-            column = (column + 1) * 26 + c - 'A';
-        }
-        return column;
-    }
+    // private int columnReferenceToPosition(String reference) {
+    //     int column = -1;
+    //     for (int i = 0; i < reference.length(); ++i) {
+    //         int c = reference.charAt(i);
+    //         column = (column + 1) * 26 + c - 'A';
+    //     }
+    //     return column;
+    // }
 
 
     public IrsSalesReportContentHandler(SharedStrings sharedStrings, StylesTable stylesTable,
