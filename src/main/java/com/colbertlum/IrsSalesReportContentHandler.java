@@ -26,6 +26,8 @@ public class IrsSalesReportContentHandler extends DefaultHandler {
     private static final String ID = "Item No";
     private static final String UOM = "UOM";
     private static final String QUANTITY = "Qty";
+    private static final String PRODUCT_NAME ="Description";
+
 
     private ArrayList<MoveOut> moveOuts;
     private StylesTable stylesTable;
@@ -90,6 +92,9 @@ public class IrsSalesReportContentHandler extends DefaultHandler {
                     case QUANTITY:
                         headerPosition.put(columString, 2);
                         break;
+                    case PRODUCT_NAME:
+                        headerPosition.put(columString, 3);
+                        break;
                 }
                 return;
             }
@@ -122,6 +127,8 @@ public class IrsSalesReportContentHandler extends DefaultHandler {
                 case 2:
                     moveOut.setQuantity(Float.parseFloat(string));
                     break;
+                case 3:
+                    moveOut.setProductName(string);
                 default:
                     break;
             }

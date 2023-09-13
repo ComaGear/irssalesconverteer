@@ -98,7 +98,7 @@ public class IrsSalesConverterApplication extends Application {
         TextField outputFileName = new TextField(IRS_SALES_ORIGIN_REPORT_NAME + date);
         outputFileNameStr = outputFileName.getText();
         outputFileName.setOnAction(e ->{
-            outputFileName.getText();
+            this.outputFileNameStr =  outputFileName.getText();
         });
 
         Text errorTextLabel = new Text("error item No:");
@@ -110,6 +110,7 @@ public class IrsSalesConverterApplication extends Application {
         processButton.setOnAction(e ->{
             SalesConverter converter = convert(pathname);
 
+            this.outputFileNameStr = outputFileName.getText();
             saveOutput(converter.getResult());
 
             textArea.setText(converter.getUnfoundMoveOuts().toString());
@@ -198,20 +199,20 @@ public class IrsSalesConverterApplication extends Application {
         int rowCount = 0;
         XSSFRow headerRow = sheet.createRow(rowCount++);
         headerRow.createCell(0).setCellValue("ItemNo");
-        headerRow.createCell(1).setCellValue("Quantity");
+        headerRow.createCell(1).setCellValue("Product Name");
+        headerRow.createCell(2).setCellValue("Quantity");
 
         for(MoveOut moveOut : result){
             XSSFRow row = sheet.createRow(rowCount++);
             row.createCell(0).setCellValue(moveOut.getProductId());
-            row.createCell(1).setCellValue(moveOut.getQuantity());
+            row.createCell(1).setCellValue(moveOut.getProductId());
+            row.createCell(2).setCellValue(moveOut.getQuantity());
         }
 
         try{
-
-            // File file = new File(outputPath + outputFileNameStr + ".xlsx");
             
-            // FileOutputStream fileOutputStream = new FileOutputStream(outputPath + "\\"+ outputFileNameStr + ".xlsx");
-            FileOutputStream fileOutputStream = new FileOutputStream("C:\\Users\\comag\\Desktop\\" + outputFileNameStr + ".xlsx");
+            FileOutputStream fileOutputStream = new FileOutputStream(outputPath + "\\"+ outputFileNameStr + ".xlsx");
+            // FileOutputStream fileOutputStream = new FileOutputStream("C:\\Users\\comag\\Desktop\\" + outputFileNameStr + ".xlsx");
             workbook.write(fileOutputStream);
 
             fileOutputStream.close();

@@ -4,6 +4,15 @@ public class MoveOut {
 
     private String productId;
     private String uom;
+    private String productName;
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
     private Float Quantity;
 
     public String getProductId() {
