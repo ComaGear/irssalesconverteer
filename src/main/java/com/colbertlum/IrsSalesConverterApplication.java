@@ -205,7 +205,7 @@ public class IrsSalesConverterApplication extends Application {
         for(MoveOut moveOut : result){
             XSSFRow row = sheet.createRow(rowCount++);
             row.createCell(0).setCellValue(moveOut.getProductId());
-            row.createCell(1).setCellValue(moveOut.getProductId());
+            row.createCell(1).setCellValue(moveOut.getProductName());
             row.createCell(2).setCellValue(moveOut.getQuantity());
         }
 
