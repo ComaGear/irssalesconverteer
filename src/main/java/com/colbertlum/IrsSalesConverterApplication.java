@@ -198,15 +198,19 @@ public class IrsSalesConverterApplication extends Application {
 
         int rowCount = 0;
         XSSFRow headerRow = sheet.createRow(rowCount++);
-        headerRow.createCell(0).setCellValue("ItemNo");
-        headerRow.createCell(1).setCellValue("Product Name");
-        headerRow.createCell(2).setCellValue("Quantity");
+        headerRow.createCell(0).setCellValue("Code");
+        headerRow.createCell(1).setCellValue("Description");
+        headerRow.createCell(2).setCellValue("Qty");
+        headerRow.createCell(3).setCellValue("unit");
+        headerRow.createCell(4).setCellValue("Unit Price");
 
         for(MoveOut moveOut : result){
             XSSFRow row = sheet.createRow(rowCount++);
             row.createCell(0).setCellValue(moveOut.getProductId());
             row.createCell(1).setCellValue(moveOut.getProductName());
             row.createCell(2).setCellValue(moveOut.getQuantity());
+            row.createCell(3).setCellValue("");
+            row.createCell(4).setCellValue(moveOut.getTotalAmount() / moveOut.getQuantity());
         }
 
         try{

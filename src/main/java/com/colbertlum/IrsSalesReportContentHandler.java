@@ -27,6 +27,7 @@ public class IrsSalesReportContentHandler extends DefaultHandler {
     private static final String UOM = "UOM";
     private static final String QUANTITY = "Qty";
     private static final String PRODUCT_NAME ="Description";
+    private static final String TOTAL_AMOUNT = "Amt(Ex)";
 
 
     private ArrayList<MoveOut> moveOuts;
@@ -95,6 +96,8 @@ public class IrsSalesReportContentHandler extends DefaultHandler {
                     case PRODUCT_NAME:
                         headerPosition.put(columString, 3);
                         break;
+                    case TOTAL_AMOUNT:
+                        headerPosition.put(columString, 4);
                 }
                 return;
             }
@@ -125,10 +128,12 @@ public class IrsSalesReportContentHandler extends DefaultHandler {
                     moveOut.setUom(string);
                     break;
                 case 2:
-                    moveOut.setQuantity(Float.parseFloat(string));
+                    moveOut.setQuantity(Double.parseDouble(string));
                     break;
                 case 3:
                     moveOut.setProductName(string);
+                case 4:
+                    moveOut.setTotalAmount(Double.parseDouble(string));
                 default:
                     break;
             }

@@ -5,6 +5,13 @@ public class MoveOut {
     private String productId;
     private String uom;
     private String productName;
+    public Double totalAmount;
+    private Double quantity;
+
+    public Double getTotalAmount() {
+        return totalAmount;
+    }
+
     public String getProductName() {
         return productName;
     }
@@ -12,8 +19,6 @@ public class MoveOut {
     public void setProductName(String productName) {
         this.productName = productName;
     }
-
-    private Float Quantity;
 
     public String getProductId() {
         return productId;
@@ -31,12 +36,12 @@ public class MoveOut {
         this.uom = uom;
     }
 
-    public Float getQuantity() {
-        return Quantity;
+    public Double getQuantity() {
+        return quantity;
     }
 
-    public void setQuantity(Float quantity) {
-        Quantity = quantity;
+    public void setQuantity(Double quantity) {
+        this.quantity = quantity;
     }
 
     @Override
@@ -44,5 +49,8 @@ public class MoveOut {
         return productId + "\n";
     }
 
-    
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
 }

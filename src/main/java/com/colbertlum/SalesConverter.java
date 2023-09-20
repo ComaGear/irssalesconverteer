@@ -57,7 +57,7 @@ public class SalesConverter {
 
             if (uom != null && moveOut.getProductId().equals(uom.getProductId())
                     && moveOut.getUom().equals(uom.getUom())) {
-                Float quantity = moveOut.getQuantity();
+                Double quantity = moveOut.getQuantity();
                 moveOut.setUom("");
                 moveOut.setQuantity(quantity * uom.getRate());
 
@@ -70,7 +70,7 @@ public class SalesConverter {
                 continue;
             }
 
-            Float quantity = moveOut.getQuantity();
+            Double quantity = moveOut.getQuantity();
             moveOut.setUom("");
             moveOut.setQuantity(quantity * uom.getRate());
 

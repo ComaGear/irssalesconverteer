@@ -101,7 +101,7 @@ public class uomContentHandler extends DefaultHandler{
                     uom.setUom(string);
                     break;
                 case 2:
-                    uom.setRate(Float.parseFloat(string));
+                    uom.setRate(Double.parseDouble(string));
                     break;
                 default:
                     break;

@@ -3,7 +3,7 @@ package com.colbertlum.entity;
 public class UOM {
     private String productId;
     private String uom;
-    private Float rate;
+    private Double rate;
 
     public String getProductId() {
         return productId;
@@ -21,11 +21,11 @@ public class UOM {
         this.uom = uom;
     }
 
-    public Float getRate() {
+    public Double getRate() {
         return rate;
     }
 
-    public void setRate(Float rate) {
+    public void setRate(Double rate) {
         this.rate = rate;
     }
 
