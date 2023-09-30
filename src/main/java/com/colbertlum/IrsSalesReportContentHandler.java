@@ -67,6 +67,14 @@ public class IrsSalesReportContentHandler extends DefaultHandler {
                     else
                         string = dataFormatter.formatRawCellContents(Float.parseFloat(value.toString()),
                                 this.formatIndex, this.formatString);
+                    
+                    if(string.contains("(") || string.contains(")")){
+                        string = string.replace("(", "");
+                        string = string.replace(")", "");
+                        string = "-" + string;
+                    }
+                    string = string.replace(",", "");
+
                     break;
                 case SSTINDEX:
                     // String sstIndex = value.toString();
