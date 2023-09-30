@@ -26,7 +26,7 @@ public class contentHanderTest {
         ArrayList<MoveOut> moveOuts = new ArrayList<MoveOut>();
 
         try {
-            File reportFile = new File("C:\\Users\\user\\Downloads\\rptProductSalesListingSummary11.xlsx");
+            File reportFile = new File("C:\\Users\\comag\\Downloads\\rptProductSalesListingSummary11 (1).xlsx");
             XSSFReader xssfReader = new XSSFReader(OPCPackage.open(reportFile));
             IrsSalesReportContentHandler contentHandler = new IrsSalesReportContentHandler(xssfReader.getSharedStringsTable(), xssfReader.getStylesTable(), moveOuts);
             XMLReader XMLReader = XMLHelper.newXMLReader();
@@ -46,7 +46,7 @@ public class contentHanderTest {
         }
 
         
-        File uomFile = new File("C:\\Users\\user\\Downloads\\EXPORT_ITEM.XLSX");
+        File uomFile = new File("C:\\Users\\comag\\Downloads\\EXPORT_ITEM.XLSX");
         ArrayList<UOM> UOMs = new ArrayList<UOM>();
 
         try {
