@@ -15,6 +15,7 @@ import org.xml.sax.XMLReader;
 
 import com.colbertlum.IrsSalesReportContentHandler;
 import com.colbertlum.SalesConverter;
+import com.colbertlum.uomContentHandler;
 import com.colbertlum.entity.MoveOut;
 import com.colbertlum.entity.UOM;
 
@@ -25,7 +26,7 @@ public class contentHanderTest {
         ArrayList<MoveOut> moveOuts = new ArrayList<MoveOut>();
 
         try {
-            File reportFile = new File("C:\\Users\\comag\\Downloads\\rptProductSalesListingSummary11.xlsx");
+            File reportFile = new File("C:\\Users\\user\\Downloads\\rptProductSalesListingSummary11.xlsx");
             XSSFReader xssfReader = new XSSFReader(OPCPackage.open(reportFile));
             IrsSalesReportContentHandler contentHandler = new IrsSalesReportContentHandler(xssfReader.getSharedStringsTable(), xssfReader.getStylesTable(), moveOuts);
             XMLReader XMLReader = XMLHelper.newXMLReader();
@@ -45,12 +46,12 @@ public class contentHanderTest {
         }
 
         
-        File uomFile = new File("C:\\Users\\comag\\Downloads\\Item CostAndUom.XLSX");
+        File uomFile = new File("C:\\Users\\user\\Downloads\\EXPORT_ITEM.XLSX");
         ArrayList<UOM> UOMs = new ArrayList<UOM>();
 
         try {
             XSSFReader xssfReader = new XSSFReader(OPCPackage.open(uomFile));
-            IrsSalesReportContentHandler contentHandler = new IrsSalesReportContentHandler(xssfReader.getSharedStringsTable(), xssfReader.getStylesTable(), moveOuts);
+            uomContentHandler contentHandler = new uomContentHandler(xssfReader.getSharedStringsTable(), xssfReader.getStylesTable(), UOMs);
             XMLReader XMLReader = XMLHelper.newXMLReader();
             XMLReader.setContentHandler(contentHandler);
             InputSource inputSource = new InputSource(xssfReader.getSheetsData().next());
@@ -69,5 +70,6 @@ public class contentHanderTest {
 
         SalesConverter salesConverter = new SalesConverter();
         salesConverter.convert(moveOuts, UOMs);
+        System.out.println(moveOuts);
     }
 }
