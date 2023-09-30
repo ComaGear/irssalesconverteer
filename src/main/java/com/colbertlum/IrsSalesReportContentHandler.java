@@ -98,6 +98,7 @@ public class IrsSalesReportContentHandler extends DefaultHandler {
                         break;
                     case TOTAL_AMOUNT:
                         headerPosition.put(columString, 4);
+                        break;
                 }
                 return;
             }
@@ -132,8 +133,10 @@ public class IrsSalesReportContentHandler extends DefaultHandler {
                     break;
                 case 3:
                     moveOut.setProductName(string);
+                    break;
                 case 4:
                     moveOut.setTotalAmount(Double.parseDouble(string));
+                    break;
                 default:
                     break;
             }

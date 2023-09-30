@@ -205,6 +205,9 @@ public class IrsSalesConverterApplication extends Application {
         headerRow.createCell(4).setCellValue("Unit Price");
 
         for(MoveOut moveOut : result){
+
+            if(moveOut.getQuantity() == 0) continue; 
+
             XSSFRow row = sheet.createRow(rowCount++);
             row.createCell(0).setCellValue(moveOut.getProductId());
             row.createCell(1).setCellValue(moveOut.getProductName());

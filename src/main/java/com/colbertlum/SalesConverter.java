@@ -85,12 +85,14 @@ public class SalesConverter {
 
         while(lo <= hi) {
             int mid = lo + (hi-lo) / 2;
-            if(uoms.get(mid).getProductId().compareTo(moveOut.getProductId()) == -1) hi = mid-1; 
-            else if(uoms.get(mid).getProductId().compareTo(moveOut.getProductId()) == 1) lo = mid+1;
+            UOM uom = uoms.get(mid);
+            int compareTo = uom.getProductId().compareTo(moveOut.getProductId());
+            if(compareTo > 0) hi = mid-1; 
+            else if(compareTo < 0) lo = mid+1;
             else{
-                if(uoms.get(mid).getUom().compareTo(moveOut.getUom()) == -1) hi = mid-1;
-                else if(uoms.get(mid).getUom().compareTo(moveOut.getUom()) == -1) lo = mid+1;
-                else return uoms.get(mid);
+                if(uom.getUom().compareTo(moveOut.getUom()) > 0) hi = mid-1;
+                else if(uom.getUom().compareTo(moveOut.getUom()) < 0) lo = mid+1;
+                else return uom;
             }
         }
         return null;
