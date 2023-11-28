@@ -27,6 +27,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import com.colbertlum.contentHandler.IrsSalesReportContentHandler;
 import com.colbertlum.entity.MoveOut;
 import com.colbertlum.entity.UOM;
 
@@ -44,7 +45,10 @@ import javafx.stage.Stage;
 
 public class IrsSalesConverterApplication extends Application {
 
+    private static final String UOM_FILE = "uomfile";
+    private static final String SOURCE_FILE = "sourcefile";
     private static final String IRS_SALES_ORIGIN_REPORT_NAME = "irsSalesOriginReport_";
+    public static final String UNSABLE_ITEM = "unsable-item";
     private String uomfile = "";
     private String pathname = "";
     private String outputPath = "";
@@ -57,8 +61,8 @@ public class IrsSalesConverterApplication extends Application {
 
         try{
             Properties properties = getProperties();
-            this.uomfile = properties.getProperty("uomfile");
-            this.pathname = properties.getProperty("sourcefile");
+            this.uomfile = properties.getProperty(UOM_FILE);
+            this.pathname = properties.getProperty(SOURCE_FILE);
             this.outputPath = properties.getProperty("output.path");
         }catch(IOException exception){
             exception.printStackTrace();
@@ -68,6 +72,8 @@ public class IrsSalesConverterApplication extends Application {
         reportPathText.setFont(font);
         Text uomPathText = new Text(uomfile);
         uomPathText.setFont(font);
+        Text unsableItemMappingPathText = new Text(IrsSalesConverterApplication.getProperty(UNSABLE_ITEM));
+        unsableItemMappingPathText.setFont(font);
 
         priStage.setTitle("Irs Sales Report Converter");
         priStage.setWidth(600);
@@ -82,7 +88,7 @@ public class IrsSalesConverterApplication extends Application {
             File report = fileChooser.showOpenDialog(priStage);
             reportPathText.setText(report.getPath());
             pathname = report.getPath();
-            saveProperty("sourcefile", report.getPath());
+            saveProperty(SOURCE_FILE, report.getPath());
         });
 
         Button selectuomButton = new Button("select uom file");
@@ -90,7 +96,14 @@ public class IrsSalesConverterApplication extends Application {
             File uomFile = fileChooser.showOpenDialog(priStage);
             uomfile = uomFile.getPath();
             uomPathText.setText(uomFile.getPath());
-            saveProperty("uomfile", uomFile.getPath());
+            saveProperty(UOM_FILE, uomFile.getPath());
+        });
+
+        Button selectUnsableItemMappingButton = new Button("select item mapping");
+        selectUnsableItemMappingButton.setOnAction(e -> {
+            File file = fileChooser.showOpenDialog(priStage);
+            saveProperty(UNSABLE_ITEM, file.getPath());
+            unsableItemMappingPathText.setText(file.getPath());
         });
 
         LocalDate now = LocalDate.now();
@@ -120,9 +133,10 @@ public class IrsSalesConverterApplication extends Application {
 
         HBox reportHBox = new HBox(selectReportButton, reportPathText);
         HBox uomHBox = new HBox(selectuomButton, uomPathText);
+        HBox mappingBox = new HBox(selectUnsableItemMappingButton, unsableItemMappingPathText);
         VBox errorBox = new VBox(processButton, errorTextLabel, textArea);
 
-        VBox vbox = new VBox(reportHBox, uomHBox, outputFileName, errorBox);
+        VBox vbox = new VBox(reportHBox, uomHBox, mappingBox, outputFileName, errorBox);
         Scene scene = new Scene(vbox, 600, 300);
 
         priStage.setScene(scene);
@@ -185,6 +199,8 @@ public class IrsSalesConverterApplication extends Application {
 
         SalesConverter converter = new SalesConverter();
 
+        // add preprocess for un-usable item mapping to validate item.
+        converter.premapping(moveOuts);
         converter.convert(moveOuts, UOMs);
 
         return converter;
@@ -242,7 +258,7 @@ public class IrsSalesConverterApplication extends Application {
         return properties;
     }
 
-    private static String getProperty(String key){
+    public static String getProperty(String key){
         try{
             Properties properties = getProperties();
             return properties.getProperty(key);

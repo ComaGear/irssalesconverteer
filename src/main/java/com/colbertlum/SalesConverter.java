@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.colbertlum.entity.MoveOut;
 import com.colbertlum.entity.UOM;
+import com.colbertlum.entity.UnsableItem;
 
 public class SalesConverter {
 
@@ -100,5 +101,19 @@ public class SalesConverter {
 
     public ArrayList<MoveOut> getResult() {
         return moveOuts;
+    }
+
+    public void premapping(ArrayList<MoveOut> preMoveOuts) {
+
+        UnUsableItemMapper unUsableItemMapper = new UnUsableItemMapper();
+
+        for(MoveOut moveOut : preMoveOuts){
+            UnsableItem foundItem = unUsableItemMapper.findItem(moveOut.getProductId());
+
+            if(foundItem == null) continue;
+
+            moveOut.setProductId(foundItem.getToUseId());
+            moveOut.setQuantity(moveOut.getQuantity() * foundItem.getMeasurement());
+        }
     }
 }

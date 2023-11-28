@@ -1,8 +1,8 @@
-package com.colbertlum;
+package com.colbertlum.contentHandler;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.BuiltinFormats;
@@ -15,35 +15,31 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.colbertlum.entity.MoveOut;
+import com.colbertlum.entity.UnsableItem;
 
-public class IrsSalesReportContentHandler extends DefaultHandler {
+public class UnUsableItemContentHandler extends DefaultHandler {
 
     enum dataType {
         NUMBER, SSTINDEX,
     }
 
-    private static final String ID = "Item No";
-    private static final String UOM = "UOM";
-    private static final String QUANTITY = "Qty";
-    private static final String PRODUCT_NAME ="Description";
-    private static final String TOTAL_AMOUNT = "Amt(Ex)";
+    private static final String ID = "NOT USED ID";
+    private static final String USE_ID = "TO USE ID";
+    private static final String MEASUREMENT = "MEASUREMENT";
 
-
-    private ArrayList<MoveOut> moveOuts;
+    private List<UnsableItem> unsableItems;
     private StylesTable stylesTable;
     private SharedStrings sharedStringsTable;
-    private Map<String, Integer> headerPosition;
+    private Map<String, String> headerPosition;
     private boolean isValue;
     private dataType readingVDataType;
     private int formatIndex;
     private String formatString;
     private int readingRow = 0;
-    private MoveOut moveOut;
+    private UnsableItem unsableItem;
     private String columString;
     private StringBuilder value;
     private DataFormatter dataFormatter;
-    private int columnPosition;
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
@@ -93,68 +89,40 @@ public class IrsSalesReportContentHandler extends DefaultHandler {
             if (readingRow == 0 && string != null) {
                 switch (string) {
                     case ID:
-                        headerPosition.put(columString, 0);
+                        headerPosition.put(columString, ID);
                         break;
-                    case UOM:
-                        headerPosition.put(columString, 1);
+                    case USE_ID:
+                        headerPosition.put(columString, USE_ID);
                         break;
-                    case QUANTITY:
-                        headerPosition.put(columString, 2);
-                        break;
-                    case PRODUCT_NAME:
-                        headerPosition.put(columString, 3);
-                        break;
-                    case TOTAL_AMOUNT:
-                        headerPosition.put(columString, 4);
+                    case MEASUREMENT:
+                        headerPosition.put(columString, MEASUREMENT);
                         break;
                 }
                 return;
             }
 
-            Integer integer = -1;
-            // integer = this.columnPosition;
-            // switch (integer) {
-            //     case 0:
-            //         moveOut.setProductId(string);
-            //         break;
-            //     case 2:
-            //         moveOut.setUom(string);
-            //         break;
-            //     case 4:
-            //         moveOut.setQuantity(Float.parseFloat(string));
-            //         break;
-            //     default:
-            //         break;
-            // }
-            
+
+            String property = null;
             if (headerPosition.containsKey(columString))
-                integer = headerPosition.get(columString);
-            switch (integer) {
-                case 0:
-                    moveOut.setProductId(string);
+                property = headerPosition.get(columString);
+            switch (property) {
+                case ID:
+                    unsableItem.setUnsableId(string);
                     break;
-                case 1:
-                    moveOut.setUom(string);
+                case USE_ID:
+                    unsableItem.setToUseId(string);
                     break;
-                case 2:
-                    moveOut.setQuantity(Double.parseDouble(string));
-                    break;
-                case 3:
-                    moveOut.setProductName(string);
-                    break;
-                case 4:
-                    moveOut.setTotalAmount(Double.parseDouble(string));
-                    break;
-                default:
+                case MEASUREMENT:
+                    unsableItem.setMeasurement(Double.parseDouble(string));
                     break;
             }
         }
 
         if ("row".equals(qName)) {
             if (readingRow > 0)
-                if(moveOut.getProductId() != null) moveOuts.add(moveOut);
+                if(unsableItem.getToUseId() != null) unsableItems.add(unsableItem);
             this.readingRow += 1;
-            this.moveOut = null;
+            this.unsableItem = null;
         }
 
         if (value != null && value.length() > 0)
@@ -207,7 +175,7 @@ public class IrsSalesReportContentHandler extends DefaultHandler {
         if ("row".equals(qName)) {
             if (readingRow == 0)
                 return;
-            this.moveOut = new MoveOut();
+            this.unsableItem = new UnsableItem();
         }
     }
 
@@ -221,13 +189,14 @@ public class IrsSalesReportContentHandler extends DefaultHandler {
     // }
 
 
-    public IrsSalesReportContentHandler(SharedStrings sharedStrings, StylesTable stylesTable,
-            ArrayList<MoveOut> moveOuts) {
+    public UnUsableItemContentHandler(SharedStrings sharedStrings, StylesTable stylesTable,
+            List<UnsableItem> unsableItems) {
         this.sharedStringsTable = sharedStrings;
         this.stylesTable = stylesTable;
-        this.moveOuts = moveOuts;
+        this.unsableItems = unsableItems;
 
         this.dataFormatter = new DataFormatter();
-        headerPosition = new HashMap<String, Integer>();
+        headerPosition = new HashMap<String, String>();
     }
+
 }
