@@ -60,6 +60,7 @@ public class SalesConverter {
                     && moveOut.getUom().equals(uom.getUom())) {
                 Double quantity = moveOut.getQuantity();
                 moveOut.setUom("");
+                moveOut.setProductName(uom.getProductName());
                 moveOut.setQuantity(quantity * uom.getRate());
 
                 continue;
@@ -73,6 +74,7 @@ public class SalesConverter {
 
             Double quantity = moveOut.getQuantity();
             moveOut.setUom("");
+            moveOut.setProductName(uom.getProductName());
             moveOut.setQuantity(quantity * uom.getRate());
 
         }
@@ -99,11 +101,29 @@ public class SalesConverter {
         return null;
     }
 
+        private static MoveOut rank(List<MoveOut> moveOuts, String id) {
+
+        int lo = 0;
+        int hi = moveOuts.size()-1;
+
+        while(lo <= hi) {
+            int mid = lo + (hi-lo) / 2;
+            MoveOut moveOut = moveOuts.get(mid);
+            int compareTo = moveOut.getProductId().compareTo(id);
+            if(compareTo > 0) hi = mid-1; 
+            else if(compareTo < 0) lo = mid+1;
+            else{
+                return moveOut;
+            }
+        }
+        return null;
+    }
+
     public ArrayList<MoveOut> getResult() {
         return moveOuts;
     }
 
-    public void premapping(ArrayList<MoveOut> preMoveOuts) {
+    public ArrayList<MoveOut> premapping(ArrayList<MoveOut> preMoveOuts) {
 
         UnUsableItemMapper unUsableItemMapper = new UnUsableItemMapper();
 
@@ -119,9 +139,21 @@ public class SalesConverter {
                 newMoveOut.setProductId(unsableItem.getToUseId());
                 newMoveOut.setProductName(moveOut.getProductName());
                 newMoveOut.setQuantity(moveOut.getQuantity() * unsableItem.getMeasurement());
-                // newMoveOut.setTotalAmount();
+                if(unsableItem.getUnitPrice() > 0){
+                    double pricePercent = unsableItem.getUnitPrice() / unsableItem.getBundlePrice();
+                    newMoveOut.setTotalAmount(moveOut.getTotalAmount() * pricePercent);
+                } else {
+                    newMoveOut.setTotalAmount(moveOut.getTotalAmount());
+                }
                 newMoveOut.setUom(moveOut.getUom());
 
+                if(unsableItem.isReduceOriginUnitQuantity()){
+                    MoveOut rankMoveOut = rank(preMoveOuts, unsableItem.getToUseId());
+                    rankMoveOut.setQuantity(rankMoveOut.getQuantity() - newMoveOut.getQuantity());
+                }
+
+                toAdd.add(newMoveOut);
+                toRemove.add(moveOut);
             }
         }
         preMoveOuts.removeAll(toRemove);
@@ -135,5 +167,6 @@ public class SalesConverter {
         //     }
         
         // });
+        return preMoveOuts;
     }
 }

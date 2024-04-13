@@ -4,6 +4,15 @@ public class UOM {
     private String productId;
     private String uom;
     private Double rate;
+    private String productName;
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
 
     public String getProductId() {
         return productId;

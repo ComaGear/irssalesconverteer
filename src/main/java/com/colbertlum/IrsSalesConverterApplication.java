@@ -28,6 +28,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 import com.colbertlum.contentHandler.IrsSalesReportContentHandler;
+import com.colbertlum.contentHandler.uomContentHandler;
 import com.colbertlum.entity.MoveOut;
 import com.colbertlum.entity.UOM;
 
@@ -45,9 +46,9 @@ import javafx.stage.Stage;
 
 public class IrsSalesConverterApplication extends Application {
 
-    private static final String UOM_FILE = "uomfile";
-    private static final String SOURCE_FILE = "sourcefile";
-    private static final String IRS_SALES_ORIGIN_REPORT_NAME = "irsSalesOriginReport_";
+    public static final String UOM_FILE = "uomfile";
+    public static final String SOURCE_FILE = "sourcefile";
+    public static final String IRS_SALES_ORIGIN_REPORT_NAME = "irsSalesOriginReport_";
     public static final String UNSABLE_ITEM = "unsable-item";
     private String uomfile = "";
     private String pathname = "";
@@ -200,8 +201,7 @@ public class IrsSalesConverterApplication extends Application {
         SalesConverter converter = new SalesConverter();
 
         // add preprocess for un-usable item mapping to validate item.
-        converter.premapping(moveOuts);
-        converter.convert(moveOuts, UOMs);
+        converter.convert(converter.premapping(moveOuts), UOMs);
 
         return converter;
     }

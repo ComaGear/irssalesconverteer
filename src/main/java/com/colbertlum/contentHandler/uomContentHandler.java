@@ -1,4 +1,4 @@
-package com.colbertlum;
+package com.colbertlum.contentHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +24,7 @@ public class uomContentHandler extends DefaultHandler{
     private static final String ID = "IM_ITEMNO";
     private static final String UOM = "IU_UOM";
     private static final String RATE = "IU_RATE";
+    private static final String NAME = "IM_DESCRIPTION";
 
     private ArrayList<UOM> UOMs;
     private StylesTable stylesTable;
@@ -86,6 +87,8 @@ public class uomContentHandler extends DefaultHandler{
                     case RATE:
                         headerPosition.put(columString, 2);
                         break;
+                    case NAME:
+                        headerPosition.put(columString, 3);
                 }
                 return;
             }
@@ -102,6 +105,9 @@ public class uomContentHandler extends DefaultHandler{
                     break;
                 case 2:
                     uom.setRate(Double.parseDouble(string));
+                    break;
+                case 3:
+                    uom.setProductName(string);
                     break;
                 default:
                     break;

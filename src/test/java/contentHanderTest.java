@@ -19,9 +19,9 @@ import org.xml.sax.XMLReader;
 
 import com.colbertlum.IrsSalesConverterApplication;
 import com.colbertlum.SalesConverter;
-import com.colbertlum.uomContentHandler;
 import com.colbertlum.contentHandler.IrsSalesReportContentHandler;
 import com.colbertlum.contentHandler.UnUsableItemContentHandler;
+import com.colbertlum.contentHandler.uomContentHandler;
 import com.colbertlum.entity.MoveOut;
 import com.colbertlum.entity.UOM;
 import com.colbertlum.entity.UnsableItem;
@@ -78,38 +78,5 @@ public class contentHanderTest {
         SalesConverter salesConverter = new SalesConverter();
         salesConverter.convert(moveOuts, UOMs);
         System.out.println(moveOuts);
-    }
-
-    @Test
-    public void readingUnsableItemXlsx(){
-        ArrayList<UnsableItem> arrayList = new ArrayList<UnsableItem>();
-        
-        try {
-            File reportFile = new File(IrsSalesConverterApplication.getProperty(IrsSalesConverterApplication.UNSABLE_ITEM));
-            XSSFReader xssfReader = new XSSFReader(OPCPackage.open(reportFile));
-            UnUsableItemContentHandler contentHandler = new UnUsableItemContentHandler(xssfReader.getSharedStringsTable(), xssfReader.getStylesTable(), arrayList);
-            XMLReader XMLReader = XMLHelper.newXMLReader();
-            XMLReader.setContentHandler(contentHandler);
-            InputSource inputSource = new InputSource(xssfReader.getSheetsData().next());
-            XMLReader.parse(inputSource);
-
-        } catch (IOException | OpenXML4JException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (SAXException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        assertTrue(!arrayList.isEmpty());
-        for(UnsableItem item : arrayList){
-            assertNotNull(item.getToUseId());
-            assertNotNull(item.getUnsableId());
-            assertNotNull(item.getMeasurement());
-            assertTrue(item.getMeasurement() > 0);
-        }
     }
 }

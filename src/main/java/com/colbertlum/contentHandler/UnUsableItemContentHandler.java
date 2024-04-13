@@ -23,9 +23,12 @@ public class UnUsableItemContentHandler extends DefaultHandler {
         NUMBER, SSTINDEX,
     }
 
-    private static final String ID = "NOT USED ID";
-    private static final String USE_ID = "TO USE ID";
-    private static final String MEASUREMENT = "MEASUREMENT";
+    private static final String ID = "Not used id";
+    private static final String USE_ID = "To use id";
+    private static final String MEASUREMENT = "Measurement";
+    private static final String UNIT_PRICE = "Unit Price";
+    private static final String BUNDLE_PRICE = "Bundle Price";
+    private static final String REDUCE = "Reduce Origin QTY";
 
     private List<UnsableItem> unsableItems;
     private StylesTable stylesTable;
@@ -97,12 +100,21 @@ public class UnUsableItemContentHandler extends DefaultHandler {
                     case MEASUREMENT:
                         headerPosition.put(columString, MEASUREMENT);
                         break;
+                    case UNIT_PRICE:
+                        headerPosition.put(columString, UNIT_PRICE);
+                        break;
+                    case BUNDLE_PRICE:
+                        headerPosition.put(columString, BUNDLE_PRICE);
+                        break;
+                    case REDUCE:
+                        headerPosition.put(columString, REDUCE);
+                        break;
                 }
                 return;
             }
 
 
-            String property = null;
+            String property = "";
             if (headerPosition.containsKey(columString))
                 property = headerPosition.get(columString);
             switch (property) {
@@ -114,6 +126,16 @@ public class UnUsableItemContentHandler extends DefaultHandler {
                     break;
                 case MEASUREMENT:
                     unsableItem.setMeasurement(Double.parseDouble(string));
+                    break;
+                case UNIT_PRICE:
+                    unsableItem.setUnitPrice(Double.parseDouble(string));
+                    break;
+                case BUNDLE_PRICE:
+                    unsableItem.setBundlePrice(Double.parseDouble(string));
+                    break;
+                case REDUCE:
+                    unsableItem.setReduceOriginUnitQuantity("1".equals(string));
+                default:
                     break;
             }
         }
