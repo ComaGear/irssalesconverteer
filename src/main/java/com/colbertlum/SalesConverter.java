@@ -107,6 +107,8 @@ public class SalesConverter {
 
         UnUsableItemMapper unUsableItemMapper = new UnUsableItemMapper();
 
+        ArrayList<MoveOut> toRemove = new ArrayList<MoveOut>();
+        ArrayList<MoveOut> toAdd = new ArrayList<MoveOut>();
         for(MoveOut moveOut : preMoveOuts){
             List<UnsableItem> foundItems = unUsableItemMapper.findItems(moveOut.getProductId());
 
@@ -120,10 +122,10 @@ public class SalesConverter {
                 // newMoveOut.setTotalAmount();
                 newMoveOut.setUom(moveOut.getUom());
 
-                preMoveOuts.remove(moveOut);
-                preMoveOuts.add(newMoveOut);
             }
         }
+        preMoveOuts.removeAll(toRemove);
+        preMoveOuts.addAll(toAdd);
 
         // preMoveOuts.sort(new Comparator<MoveOut>() {
 
