@@ -108,12 +108,30 @@ public class SalesConverter {
         UnUsableItemMapper unUsableItemMapper = new UnUsableItemMapper();
 
         for(MoveOut moveOut : preMoveOuts){
-            UnsableItem foundItem = unUsableItemMapper.findItem(moveOut.getProductId());
+            List<UnsableItem> foundItems = unUsableItemMapper.findItems(moveOut.getProductId());
 
-            if(foundItem == null) continue;
+            if(foundItems == null) continue;
 
-            moveOut.setProductId(foundItem.getToUseId());
-            moveOut.setQuantity(moveOut.getQuantity() * foundItem.getMeasurement());
+            for(UnsableItem unsableItem : foundItems){
+                MoveOut newMoveOut = new MoveOut();
+                newMoveOut.setProductId(unsableItem.getToUseId());
+                newMoveOut.setProductName(moveOut.getProductName());
+                newMoveOut.setQuantity(moveOut.getQuantity() * unsableItem.getMeasurement());
+                // newMoveOut.setTotalAmount();
+                newMoveOut.setUom(moveOut.getUom());
+
+                preMoveOuts.remove(moveOut);
+                preMoveOuts.add(newMoveOut);
+            }
         }
+
+        // preMoveOuts.sort(new Comparator<MoveOut>() {
+
+        //     @Override
+        //     public int compare(MoveOut o1, MoveOut o2) {
+        //         o1
+        //     }
+        
+        // });
     }
 }

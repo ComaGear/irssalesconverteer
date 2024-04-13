@@ -3,6 +3,7 @@ package com.colbertlum;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -39,6 +40,27 @@ public class UnUsableItemMapper {
             }
         }
         return null;
+    }
+
+    public List<UnsableItem> findItems(String unsableItemId){
+        
+        unsableItems.sort(new Comparator<UnsableItem>() {
+
+            @Override
+            public int compare(UnsableItem o1, UnsableItem o2) {
+                return o1.getUnsableId().toLowerCase().compareTo(o2.getUnsableId().toLowerCase());
+            }
+            
+        });
+
+        ArrayList<UnsableItem> foundItems = new ArrayList<UnsableItem>();
+        for(UnsableItem item : unsableItems){
+            if(item.getUnsableId().toLowerCase().compareTo(unsableItemId.toLowerCase()) == 0){
+                foundItems.add(item);
+            }
+        }
+
+        return foundItems;
     }
 
     public UnUsableItemMapper(){
