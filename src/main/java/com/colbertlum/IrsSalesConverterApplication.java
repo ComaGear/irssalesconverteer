@@ -9,9 +9,13 @@ import java.io.InputStream;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
+import java.util.Vector;
+import java.util.stream.Collectors;
 
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.SystemMenuBar;
 import javax.xml.parsers.ParserConfigurationException;
@@ -50,10 +54,12 @@ public class IrsSalesConverterApplication extends Application {
     public static final String SOURCE_FILE = "sourcefile";
     public static final String IRS_SALES_ORIGIN_REPORT_NAME = "irsSalesOriginReport_";
     public static final String UNSABLE_ITEM = "unsable-item";
-    private String uomfile = "";
+    private static String uomfile = "";
     private String pathname = "";
     private String outputPath = "";
     private String outputFileNameStr;
+
+    private static Context context;
 
     // public static final String PRI_PATH = "C:\\Program Files\\ColbertLum\\irssalesconverter";
 
@@ -119,13 +125,17 @@ public class IrsSalesConverterApplication extends Application {
         TextArea textArea = new TextArea();
         textArea.setDisable(true);
 
+        Text toExcludeDocListText = new Text("above is to generating e-invoice Doc No List (Seperate by ',')");
+        TextArea toExcludeDocTextArea = new TextArea();
         
         Button processButton = new Button("generate");
         processButton.setOnAction(e ->{
-            SalesConverter converter = convert(pathname);
+            DocSalesConverter docSalesConverter = new DocSalesConverter();
+            docSalesConverter.setToExcludeDocList(parseExcludeDoc(toExcludeDocTextArea));
+            // SalesConverter converter = process(pathname);
 
-            this.outputFileNameStr = outputFileName.getText();
-            saveOutput(converter.getResult());
+            // this.outputFileNameStr = outputFileName.getText();
+            // saveOutput(converter.getResult());
 
             textArea.setText(converter.getUnfoundMoveOuts().toString());
             textArea.setDisable(false);
@@ -136,8 +146,9 @@ public class IrsSalesConverterApplication extends Application {
         HBox uomHBox = new HBox(selectuomButton, uomPathText);
         HBox mappingBox = new HBox(selectUnsableItemMappingButton, unsableItemMappingPathText);
         VBox errorBox = new VBox(processButton, errorTextLabel, textArea);
+        VBox toExcludeDocBox = new VBox(toExcludeDocListText, toExcludeDocTextArea);
 
-        VBox vbox = new VBox(reportHBox, uomHBox, mappingBox, outputFileName, errorBox);
+        VBox vbox = new VBox(reportHBox, uomHBox, mappingBox, outputFileName, errorBox, toExcludeDocBox);
         Scene scene = new Scene(vbox, 600, 300);
 
         priStage.setScene(scene);
@@ -146,12 +157,22 @@ public class IrsSalesConverterApplication extends Application {
     
 
 
+    private List<String> parseExcludeDoc(TextArea toExcludeDocTextArea) {
+        String text = toExcludeDocTextArea.getText();
+        List<String> result = Arrays.asList(text.split(",")).stream()
+        .filter(s -> !s.trim().isEmpty())
+        .collect(Collectors.toList());
+        return result;
+    }
+
+
+
     public static void main(String[] args) {
 
         Application.launch(args);
     }
 
-    private SalesConverter convert(String reportPath){
+    private SalesConverter process(String reportPath){
 
         ArrayList<MoveOut> moveOuts = new ArrayList<MoveOut>();
 
@@ -175,28 +196,7 @@ public class IrsSalesConverterApplication extends Application {
             e.printStackTrace();
         }
 
-        
-        File uomFile = new File(uomfile);
-        ArrayList<UOM> UOMs = new ArrayList<UOM>();
-
-        try {
-            XSSFReader xssfReader = new XSSFReader(OPCPackage.open(uomFile));
-            uomContentHandler contentHandler = new uomContentHandler(xssfReader.getSharedStringsTable(), xssfReader.getStylesTable(), UOMs);
-            XMLReader XMLReader = XMLHelper.newXMLReader();
-            XMLReader.setContentHandler(contentHandler);
-            InputSource inputSource = new InputSource(xssfReader.getSheetsData().next());
-            XMLReader.parse(inputSource);
-
-        } catch (IOException | OpenXML4JException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (SAXException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        List<UOM> UOMs = getContext().getUom();
 
         SalesConverter converter = new SalesConverter();
 
@@ -206,7 +206,7 @@ public class IrsSalesConverterApplication extends Application {
         return converter;
     }
 
-    private void saveOutput(ArrayList<MoveOut> result) {
+    private void saveOutput(List<MoveOut> result) {
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("sheet1");
@@ -244,6 +244,48 @@ public class IrsSalesConverterApplication extends Application {
             System.out.println(exception.toString());
         }
     }
+
+    public static Context getContext(){
+        if(context == null) {
+            context = loadContext();
+        }
+
+
+        return context;
+    }
+
+    private static Context loadContext() {
+
+        context = new Context();
+
+        File uomFile = new File(uomfile);
+        ArrayList<UOM> UOMs = new ArrayList<UOM>();
+        
+        try {
+            XSSFReader xssfReader = new XSSFReader(OPCPackage.open(uomFile));
+            uomContentHandler contentHandler = new uomContentHandler(xssfReader.getSharedStringsTable(), xssfReader.getStylesTable(), UOMs);
+            XMLReader XMLReader = XMLHelper.newXMLReader();
+            XMLReader.setContentHandler(contentHandler);
+            InputSource inputSource = new InputSource(xssfReader.getSheetsData().next());
+            XMLReader.parse(inputSource);
+
+        } catch (IOException | OpenXML4JException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (SAXException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        context.setUom(UOMs);
+
+        return context;
+    }
+
+
 
     private static Properties getProperties() throws IOException{
         Properties properties;

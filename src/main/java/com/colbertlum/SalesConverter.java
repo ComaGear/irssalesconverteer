@@ -1,8 +1,6 @@
 package com.colbertlum;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -14,7 +12,9 @@ public class SalesConverter {
 
     private List<MoveOut> unfoundMoveOuts;
 
-    ArrayList<MoveOut> moveOuts;
+    List<MoveOut> moveOuts;
+
+    List<UOM> uoms;
 
     public List<MoveOut> getUnfoundMoveOuts() {
         return unfoundMoveOuts;
@@ -24,7 +24,7 @@ public class SalesConverter {
         this.unfoundMoveOuts = new ArrayList<MoveOut>();
     }
 
-    public void convert(ArrayList<MoveOut> moveOuts, ArrayList<UOM> uoms) {
+    public void convert(List<MoveOut> moveOuts) {
 
         this.moveOuts = moveOuts;
 
@@ -101,7 +101,7 @@ public class SalesConverter {
         return null;
     }
 
-        private static MoveOut rank(List<MoveOut> moveOuts, String id) {
+    private static MoveOut rank(List<MoveOut> moveOuts, String id) {
 
         int lo = 0;
         int hi = moveOuts.size()-1;
@@ -119,7 +119,7 @@ public class SalesConverter {
         return null;
     }
 
-    public ArrayList<MoveOut> getResult() {
+    public List<MoveOut> getResult() {
         return moveOuts;
     }
 
@@ -168,5 +168,9 @@ public class SalesConverter {
         
         // });
         return preMoveOuts;
+    }
+
+    public void setUOMs(List<UOM> uom) {
+        this.uoms = uom;
     }
 }
