@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.colbertlum.entity.Doc;
+import com.colbertlum.entity.DocSalesConverterResult;
 import com.colbertlum.entity.MoveOut;
 import com.colbertlum.entity.MoveOutDocResultGroupByDate;
 import com.colbertlum.entity.MoveOutDocResults;
@@ -18,7 +19,7 @@ public class DocSalesConverter {
 
     List<String> toExcludeDocList;
     
-    public void process(File targetFile){
+    public DocSalesConverterResult process(File targetFile){
         MoveOutDocResults moveOutsWithDoc = MoveOutUtils.loadMoveOutsWithDoc(targetFile);
 
         List<String> excludeDoc = loadExcludeDoc();
@@ -29,8 +30,12 @@ public class DocSalesConverter {
         loopDocAndConverting(moveOutsWithDoc.getDocList(), salesConverter);
 
         List<Doc> cashDocList = findCashDocFromExclude(moveOutsWithDoc.getDocList(), excludeDoc);
+        List<Doc> excludedDocList = findDocFromCash(moveOutsWithDoc.getDocList(), cashDocList);
 
-        splitDocListByDate(cashDocList);
+        MoveOutDocResultGroupByDate groupByDate = splitDocListByDate(cashDocList);
+        MoveOutDocResultGroupByDate ExcludeDocListGroupByDate = splitDocListByDate(excludedDocList);
+
+        return new DocSalesConverterResult(groupByDate, ExcludeDocListGroupByDate);
     }
 
     private MoveOutDocResultGroupByDate splitDocListByDate(List<Doc> cashDocList) {
@@ -89,6 +94,17 @@ public class DocSalesConverter {
                 .filter(doc -> !excludeDoc.contains(doc.getId()))
                 .collect(Collectors.toList());
     }
+
+    public static List<Doc> findDocFromCash(List<Doc> docList, List<Doc> cashDoc) {
+        ArrayList<String> list = new ArrayList<String>();
+        for(Doc doc : cashDoc) list.add(doc.getId());
+
+        return docList.stream()
+                .filter(doc -> !list.contains(doc.getId()))
+                .collect(Collectors.toList());
+    }
+
+
 
     public void setToExcludeDocList(List<String> excludeDoc) {
         this.toExcludeDocList = excludeDoc;

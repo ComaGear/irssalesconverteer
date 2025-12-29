@@ -33,6 +33,7 @@ import org.xml.sax.XMLReader;
 
 import com.colbertlum.contentHandler.IrsSalesReportContentHandler;
 import com.colbertlum.contentHandler.uomContentHandler;
+import com.colbertlum.entity.DocSalesConverterResult;
 import com.colbertlum.entity.MoveOut;
 import com.colbertlum.entity.UOM;
 
@@ -132,6 +133,10 @@ public class IrsSalesConverterApplication extends Application {
         processButton.setOnAction(e ->{
             DocSalesConverter docSalesConverter = new DocSalesConverter();
             docSalesConverter.setToExcludeDocList(parseExcludeDoc(toExcludeDocTextArea));
+            DocSalesConverterResult result = docSalesConverter.process(new File(pathname));
+            saveResult into folder by seperate each date.
+            cash into single cash.xlsx
+            excluded doc into seperate {DocNo}.xlsx
             // SalesConverter converter = process(pathname);
 
             // this.outputFileNameStr = outputFileName.getText();
@@ -201,7 +206,7 @@ public class IrsSalesConverterApplication extends Application {
         SalesConverter converter = new SalesConverter();
 
         // add preprocess for un-usable item mapping to validate item.
-        converter.convert(converter.premapping(moveOuts), UOMs);
+        converter.convert(converter.premapping(moveOuts));
 
         return converter;
     }
