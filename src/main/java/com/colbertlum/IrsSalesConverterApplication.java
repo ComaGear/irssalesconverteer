@@ -31,8 +31,10 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import com.colbertlum.Utils.BiztoryOutputConverter;
 import com.colbertlum.contentHandler.IrsSalesReportContentHandler;
 import com.colbertlum.contentHandler.uomContentHandler;
+import com.colbertlum.contentWriter.DocSalesResultSaving;
 import com.colbertlum.entity.DocSalesConverterResult;
 import com.colbertlum.entity.MoveOut;
 import com.colbertlum.entity.UOM;
@@ -134,6 +136,10 @@ public class IrsSalesConverterApplication extends Application {
             DocSalesConverter docSalesConverter = new DocSalesConverter();
             docSalesConverter.setToExcludeDocList(parseExcludeDoc(toExcludeDocTextArea));
             DocSalesConverterResult result = docSalesConverter.process(new File(pathname));
+
+            DocSalesResultSaving saving = new DocSalesResultSaving();
+            saving.savingToBiztory(biztoryFolder, BiztoryOutputConverter.converting(result));
+            saving.savingToAutoCount(AutoCountFolder, AutoCountOutputConverter.converting(result));
             saveResult into folder by seperate each date.
             cash into single cash.xlsx
             excluded doc into seperate {DocNo}.xlsx
