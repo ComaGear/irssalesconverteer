@@ -19,24 +19,50 @@ public class BiztoryOutputConverter {
 
 
         MoveOutDocResultGroupByDate cashDocGroupByDate = docResults.getCashDocGroupByDate();
-        groupingIntoDate(bzResult, cashDocGroupByDate);
+        MoveOutDocResultGroupByDate specifyDocGroupByDate = docResults.getExcludeDocListGroupByDate();
+        groupingCashIntoDate(bzResult, cashDocGroupByDate);
+        groupingSpecifyIntoDate(bzResult, specifyDocGroupByDate);
     }
 
-    private void groupingIntoDate(BiztoryOutputResult bzResult, MoveOutDocResultGroupByDate moveoutDoc){
+    private static void groupingSpecifyIntoDate(BiztoryOutputResult bzResult,
+            MoveOutDocResultGroupByDate moveoutDoc) {
         Set<LocalDate> localDateSet = moveoutDoc.getMapKeySet();
         
         for(LocalDate date : localDateSet) {
             MoveOutDocResults moveOutDocResults = moveoutDoc.getMoveOutDocResultByLocalDate(date);
             List<BiztoryOutputMoveOut> biztoryOutputMoveOuts = new ArrayList<BiztoryOutputMoveOut>();
             moveOutDocResults.getDocList().stream().forEach(item -> {
-                biztoryOutputMoveOuts.addAll(toBiztoryOutputMoveOuts(item.getMoveOuts())));
+                biztoryOutputMoveOuts.addAll(toBiztoryOutputMoveOuts(item.getMoveOuts()));
+                bzResult.putSpecifyDoc(date, item.getId(), biztoryOutputMoveOuts);
+            });;
+        }
+    }
+
+    private static void groupingCashIntoDate(BiztoryOutputResult bzResult, MoveOutDocResultGroupByDate moveoutDoc){
+        Set<LocalDate> localDateSet = moveoutDoc.getMapKeySet();
+        
+        for(LocalDate date : localDateSet) {
+            MoveOutDocResults moveOutDocResults = moveoutDoc.getMoveOutDocResultByLocalDate(date);
+            List<BiztoryOutputMoveOut> biztoryOutputMoveOuts = new ArrayList<BiztoryOutputMoveOut>();
+            moveOutDocResults.getDocList().stream().forEach(item -> {
+                biztoryOutputMoveOuts.addAll(toBiztoryOutputMoveOuts(item.getMoveOuts()));
             });;
             bzResult.putCashDoc(date, biztoryOutputMoveOuts);
         }
-        
     }
 
-    private List<BiztoryOutputMoveOut> toBiztoryOutputMoveOuts(List<MoveOut> moveOuts) {
-        converting list of MoveOut.java into biztory outputing ready BiztoryOutputMoveOuts
+    private static List<BiztoryOutputMoveOut> toBiztoryOutputMoveOuts(List<MoveOut> moveOuts) {
+        List<BiztoryOutputMoveOut> list = new ArrayList<BiztoryOutputMoveOut>();
+        for(MoveOut moveOut : moveOuts) {
+            BiztoryOutputMoveOut bzMoveOut = new BiztoryOutputMoveOut();
+            bzMoveOut.setId(moveOut.getProductId());
+            bzMoveOut.setName(moveOut.getProductName());
+            bzMoveOut.setPrice(moveOut.getTotalAmount() / moveOut.getQuantity());
+            bzMoveOut.setQuantity(moveOut.getQuantity());
+            bzMoveOut.setUom("");
+
+            list.add(bzMoveOut);
+        }
+        return list;
     }
 }
