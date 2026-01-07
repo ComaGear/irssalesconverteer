@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import lombok.ToString;
+
+@ToString
 public class BiztoryOutputResult {
     private Map<LocalDate, List<BiztoryOutputMoveOut>> cashDocMap;
     private Map<LocalDate, Map<String, List<BiztoryOutputMoveOut>>> specifyDocMap;
@@ -22,7 +25,7 @@ public class BiztoryOutputResult {
     }
 
     public void putSpecifyDoc(LocalDate date, String docNo, List<BiztoryOutputMoveOut> moveOuts) {
-        if(specifyDocMap.get(date) == null) {
+        if (specifyDocMap.get(date) == null) {
             specifyDocMap.put(date, new HashMap<String, List<BiztoryOutputMoveOut>>());
         }
 
@@ -39,7 +42,7 @@ public class BiztoryOutputResult {
         List<BiztoryOutputMoveOut> list = new ArrayList<BiztoryOutputMoveOut>();
         Map<String, List<BiztoryOutputMoveOut>> localDateMap = specifyDocMap.get(date);
         Set<String> localDateKeySet = localDateMap.keySet();
-        for(String key : localDateKeySet) {
+        for (String key : localDateKeySet) {
             list.addAll(localDateMap.get(key));
         }
 
@@ -48,11 +51,19 @@ public class BiztoryOutputResult {
 
     // get KeySet of String from entry of specifyDocMap by LocalDate.
     // it used to before getSpecifyMoveOuts to get a list of DocNo Strings.
-    public Set<String> getSpecifyDocNoKeySet(LocalDate date){
+    public Set<String> getSpecifyDocNoKeySet(LocalDate date) {
         return specifyDocMap.get(date).keySet();
     }
 
-    public BiztoryOutputResult(){
+    public Set<LocalDate> cashDocLocalDates() {
+        return cashDocMap.keySet();
+    }
+
+    public Set<LocalDate> specifyDocLocalDates() {
+        return specifyDocMap.keySet();
+    }
+
+    public BiztoryOutputResult() {
         cashDocMap = new HashMap<LocalDate, List<BiztoryOutputMoveOut>>();
         specifyDocMap = new HashMap<LocalDate, Map<String, List<BiztoryOutputMoveOut>>>();
     }

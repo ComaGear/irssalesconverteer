@@ -18,7 +18,7 @@ public interface ContentHandlerValidationInterface<T> {
     * column list, to verify data source should have registered columns
     */
     default void validateHeader(Map<String, String> headers) {
-        Set<String> present = (Set<String>) headers.values();
+        Set<String> present = new java.util.HashSet<>(headers.values());
 
         for (String required : shouldHaveColumns()) {
             if (!present.contains(required)) {

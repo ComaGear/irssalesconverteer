@@ -144,7 +144,8 @@ public class unsableItemTest {
         }
 
         SalesConverter salesConverter = new SalesConverter();
-        salesConverter.convert(salesConverter.premapping(arrayList), UOMs);
+        salesConverter.setUOMs(IrsSalesConverterApplication.getContext().getUom());
+        salesConverter.convert(salesConverter.premapping(arrayList));
     }
 
 }

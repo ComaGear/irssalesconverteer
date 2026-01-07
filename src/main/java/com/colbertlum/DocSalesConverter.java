@@ -35,7 +35,7 @@ public class DocSalesConverter {
         MoveOutDocResultGroupByDate groupByDate = splitDocListByDate(cashDocList);
         MoveOutDocResultGroupByDate ExcludeDocListGroupByDate = splitDocListByDate(excludedDocList);
 
-        return new DocSalesConverterResult(groupByDate, ExcludeDocListGroupByDate);
+        return new DocSalesConverterResult(groupByDate, ExcludeDocListGroupByDate, salesConverter.getUnfoundMoveOuts());
     }
 
     private MoveOutDocResultGroupByDate splitDocListByDate(List<Doc> cashDocList) {

@@ -31,6 +31,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import com.colbertlum.Utils.AutoCountOutputConverter;
 import com.colbertlum.Utils.BiztoryOutputConverter;
 import com.colbertlum.contentHandler.IrsSalesReportContentHandler;
 import com.colbertlum.contentHandler.uomContentHandler;
@@ -57,6 +58,9 @@ public class IrsSalesConverterApplication extends Application {
     public static final String SOURCE_FILE = "sourcefile";
     public static final String IRS_SALES_ORIGIN_REPORT_NAME = "irsSalesOriginReport_";
     public static final String UNSABLE_ITEM = "unsable-item";
+    public static final String BIZTORY_OUTPUT_FOLDER = "biztoryOutputFolder";
+    public static final String AUTO_COUNT_OUTPUT_FOLDER ="autocountOutputFolder";
+
     private static String uomfile = "";
     private String pathname = "";
     private String outputPath = "";
@@ -64,7 +68,7 @@ public class IrsSalesConverterApplication extends Application {
 
     private static Context context;
 
-    // public static final String PRI_PATH = "C:\\Program Files\\ColbertLum\\irssalesconverter";
+    // public static final String PRI_PATH = "C:\Program Files\ColbertLum\irssalesconverter";
 
     @Override
     public void start(Stage priStage) throws Exception {
@@ -138,17 +142,16 @@ public class IrsSalesConverterApplication extends Application {
             DocSalesConverterResult result = docSalesConverter.process(new File(pathname));
 
             DocSalesResultSaving saving = new DocSalesResultSaving();
-            saving.savingToBiztory(biztoryFolder, BiztoryOutputConverter.converting(result));
-            saving.savingToAutoCount(AutoCountFolder, AutoCountOutputConverter.converting(result));
-            saveResult into folder by seperate each date.
-            cash into single cash.xlsx
-            excluded doc into seperate {DocNo}.xlsx
+            String biztoryFolder = getProperty(BIZTORY_OUTPUT_FOLDER);
+            String autoCountFolder = getProperty(AUTO_COUNT_OUTPUT_FOLDER);
+            saving.savingToBiztory(new File(biztoryFolder), BiztoryOutputConverter.converting(result));
+            saving.savingToAutoCount(new File(autoCountFolder), AutoCountOutputConverter.converting(result));
             // SalesConverter converter = process(pathname);
 
             // this.outputFileNameStr = outputFileName.getText();
             // saveOutput(converter.getResult());
 
-            textArea.setText(converter.getUnfoundMoveOuts().toString());
+            textArea.setText(result.getUnfoundMoveOuts().toString());
             textArea.setDisable(false);
         });
 

@@ -68,8 +68,11 @@ public class IrsSalesReportWithDocIdContentHandler extends ContentHandler {
     }
 
     private void addDocToList(Doc doc, MoveOut moveOut){
-        Doc lastDoc = docList.get(docList.size() - 1);
-        if(lastDoc.getId().equals(doc.getId())) {
+        Doc lastDoc = null;
+        if(docList.size() > 0) {
+            lastDoc = docList.get(docList.size() - 1);
+        }
+        if(lastDoc == null || !lastDoc.getId().equals(doc.getId())) {
 
             if(doc.getMoveOuts() == null) {
                 doc.setMoveOuts(new ArrayList<MoveOut>());

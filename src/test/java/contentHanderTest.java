@@ -76,7 +76,8 @@ public class contentHanderTest {
         }
 
         SalesConverter salesConverter = new SalesConverter();
-        salesConverter.convert(moveOuts, UOMs);
+        salesConverter.setUOMs(IrsSalesConverterApplication.getContext().getUom());
+        salesConverter.convert(moveOuts);
         System.out.println(moveOuts);
     }
 }
