@@ -4,6 +4,8 @@ import java.util.List;
 
 public class DocSalesConverterResult {
 
+    
+
     private MoveOutDocResultGroupByDate cashDocGroupByDate;
     private MoveOutDocResultGroupByDate excludeDocListGroupByDate;
 

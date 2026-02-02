@@ -31,14 +31,16 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-import com.colbertlum.Utils.AutoCountOutputConverter;
 import com.colbertlum.Utils.BiztoryOutputConverter;
+import com.colbertlum.Utils.tabReportContextConvertUtils.AutoCountOutputConverter;
 import com.colbertlum.contentHandler.IrsSalesReportContentHandler;
+import com.colbertlum.contentHandler.UnUsableItemContentHandler;
 import com.colbertlum.contentHandler.uomContentHandler;
 import com.colbertlum.contentWriter.DocSalesResultSaving;
 import com.colbertlum.entity.DocSalesConverterResult;
 import com.colbertlum.entity.MoveOut;
 import com.colbertlum.entity.UOM;
+import com.colbertlum.entity.UnsableItem;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -294,7 +296,29 @@ public class IrsSalesConverterApplication extends Application {
             e.printStackTrace();
         }
 
+        List<UnsableItem> unsableItems = new ArrayList<UnsableItem>();
+        try {
+            File file = new File(IrsSalesConverterApplication.getProperty(IrsSalesConverterApplication.UNSABLE_ITEM));
+            XSSFReader xssfReader = new XSSFReader(OPCPackage.open(file));
+            UnUsableItemContentHandler contentHandler = new UnUsableItemContentHandler(xssfReader.getSharedStringsTable(), xssfReader.getStylesTable(), unsableItems);
+            XMLReader XMLReader = XMLHelper.newXMLReader();
+            XMLReader.setContentHandler(contentHandler);
+            InputSource inputSource = new InputSource(xssfReader.getSheetsData().next());
+            XMLReader.parse(inputSource);
+
+        } catch (IOException | OpenXML4JException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (SAXException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         context.setUom(UOMs);
+        context.setUnsableItems(unsableItems);
 
         return context;
     }

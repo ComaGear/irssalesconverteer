@@ -11,10 +11,10 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.colbertlum.constants.DateTimePattern;
-import com.colbertlum.entity.AutoCountOutputMoveOut;
 import com.colbertlum.entity.AutoCountOutputResult;
 import com.colbertlum.entity.BiztoryOutputMoveOut;
 import com.colbertlum.entity.BiztoryOutputResult;
+import com.colbertlum.entity.tabReportContext.AutoCountOutputMoveOut;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -75,10 +75,12 @@ public class DocSalesResultSaving {
 
     private void writeBiztoryFile(String newDateFileString, List<BiztoryOutputMoveOut> moveOuts) {
         XSSFWorkbook workbook = null;
+        FileOutputStream fileOutputStream = null;
         try {
             File file = new File(newDateFileString);
 
-            System.out.println("try to write file with path : " + file.getAbsolutePath() + " : " + newDateFileString);
+            log.info("try to write file with path : " + file.getAbsolutePath() + " : " + newDateFileString);
+            log.info("try to write file with path : {} : {}", file.getAbsolutePath(), newDateFileString);
 
             if (!file.exists())
                 file.createNewFile();
@@ -89,6 +91,8 @@ public class DocSalesResultSaving {
             ContentWriter<BiztoryOutputMoveOut> contentWriter = new ContentWriter<>(sheet,
                     new BiztoryOutputMoveOutMapper(), moveOuts);
             contentWriter.writeAll();
+            fileOutputStream = new FileOutputStream(file);
+            workbook.write(fileOutputStream);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -96,6 +100,13 @@ public class DocSalesResultSaving {
             if (workbook != null) {
                 try {
                     workbook.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (fileOutputStream != null) {
+                try {
+                    fileOutputStream.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

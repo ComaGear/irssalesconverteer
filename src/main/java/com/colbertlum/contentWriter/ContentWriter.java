@@ -7,6 +7,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class ContentWriter<T> {
     
     private XSSFSheet sheet;
@@ -27,6 +30,8 @@ public class ContentWriter<T> {
 
     public void writeHeader(){
         if (list == null || list.isEmpty()) return;
+        log.debug("try to write header with size of {}, ({})", headerList.size(), headerList);
+        
         int rowIndex = 0;
         XSSFRow row = sheet.getRow(rowIndex);
         if(row == null) row = sheet.createRow(rowIndex);
@@ -35,6 +40,7 @@ public class ContentWriter<T> {
             Cell cell = row.getCell(columnIndex);
             if(cell == null) cell = row.createCell(columnIndex);
             cell.setCellValue(header);
+            columnIndex++;
         }
     }
 
@@ -47,6 +53,7 @@ public class ContentWriter<T> {
             Cell cell = row.getCell(columnIndex);
             if(cell == null) cell = row.createCell(columnIndex);
             cell.setCellValue(header);
+            columnIndex++;
         }
     }
 
@@ -63,6 +70,7 @@ public class ContentWriter<T> {
                 Cell cell = row.getCell(columnIndex);
                 if(cell == null) cell = row.createCell(columnIndex);
                 cell.setCellValue(mapper.onCell(header, o));
+                columnIndex++;
             }
         }
     }

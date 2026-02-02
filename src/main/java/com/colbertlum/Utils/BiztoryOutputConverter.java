@@ -35,6 +35,7 @@ public class BiztoryOutputConverter {
         for(LocalDate date : localDateSet) {
             MoveOutDocResults moveOutDocResults = moveoutDoc.getMoveOutDocResultByLocalDate(date);
             List<BiztoryOutputMoveOut> biztoryOutputMoveOuts = new ArrayList<BiztoryOutputMoveOut>();
+            log.debug("specify grouping date into BiztoryOutputResult date: {}, with doc list size of {}", date, moveOutDocResults.getDocList().size());
             moveOutDocResults.getDocList().stream().forEach(item -> {
                 biztoryOutputMoveOuts.addAll(toBiztoryOutputMoveOuts(item.getMoveOuts()));
                 bzResult.putSpecifyDoc(date, item.getId(), biztoryOutputMoveOuts);
@@ -48,6 +49,7 @@ public class BiztoryOutputConverter {
         for(LocalDate date : localDateSet) {
             MoveOutDocResults moveOutDocResults = moveoutDoc.getMoveOutDocResultByLocalDate(date);
             List<BiztoryOutputMoveOut> biztoryOutputMoveOuts = new ArrayList<BiztoryOutputMoveOut>();
+            log.debug("grouping date into BiztoryOutputResult date: {}, with doc list size of {}", date, moveOutDocResults.getDocList().size());
             moveOutDocResults.getDocList().stream().forEach(item -> {
                 biztoryOutputMoveOuts.addAll(toBiztoryOutputMoveOuts(item.getMoveOuts()));
             });;

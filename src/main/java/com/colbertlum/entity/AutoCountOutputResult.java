@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.colbertlum.entity.tabReportContext.AutoCountOutputMoveOut;
+
 public class AutoCountOutputResult {
     private Map<LocalDate, List<AutoCountOutputMoveOut>> cashDocMap;
         private Map<LocalDate, Map<String, List<AutoCountOutputMoveOut>>> specifyDocMap;

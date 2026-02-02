@@ -6,6 +6,8 @@ public class MoveOutDocResults {
 
     private List<Doc> docList;
     private List<MoveOut> moveOuts;
+
+    private List
     public List<Doc> getDocList() {
         return docList;
     }

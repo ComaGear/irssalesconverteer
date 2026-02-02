@@ -1,4 +1,4 @@
-package com.colbertlum.entity;
+package com.colbertlum.entity.tabReportContext;
 
 public class AutoCountOutputMoveOut {
 

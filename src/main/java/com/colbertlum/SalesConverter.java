@@ -11,6 +11,7 @@ import com.colbertlum.entity.UnsableItem;
 public class SalesConverter {
 
     private List<MoveOut> unfoundMoveOuts;
+    UnUsableItemMapper unUsableItemMapper;
 
     List<MoveOut> moveOuts;
 
@@ -22,6 +23,7 @@ public class SalesConverter {
 
     public SalesConverter() {
         this.unfoundMoveOuts = new ArrayList<MoveOut>();
+        unUsableItemMapper = new UnUsableItemMapper();
     }
 
     public void convert(List<MoveOut> moveOuts) {
@@ -124,8 +126,6 @@ public class SalesConverter {
     }
 
     public ArrayList<MoveOut> premapping(ArrayList<MoveOut> preMoveOuts) {
-
-        UnUsableItemMapper unUsableItemMapper = new UnUsableItemMapper();
 
         ArrayList<MoveOut> toRemove = new ArrayList<MoveOut>();
         ArrayList<MoveOut> toAdd = new ArrayList<MoveOut>();

@@ -54,6 +54,9 @@ public class IrsSalesReportWithDocIdContentHandler extends ContentHandler {
         if(doc.getId() != null && moveOut.getProductId() != null) {
             addDocToList(doc, moveOut);
         }
+
+        this.doc = new Doc();
+        this.moveOut = new MoveOut();
     }
     
     public IrsSalesReportWithDocIdContentHandler(SharedStrings sharedStrings, StylesTable stylesTable,

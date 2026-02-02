@@ -1,4 +1,4 @@
-package com.colbertlum;
+package com.colbertlum.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +15,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import com.colbertlum.IrsSalesConverterApplication;
+import com.colbertlum.UnUsableItemMapper;
 import com.colbertlum.contentHandler.IrsSalesReportContentHandler;
 import com.colbertlum.contentHandler.IrsSalesReportWithDocIdContentHandler;
 import com.colbertlum.entity.Doc;
@@ -22,6 +24,9 @@ import com.colbertlum.entity.MoveOut;
 import com.colbertlum.entity.MoveOutDocResults;
 import com.colbertlum.entity.UnsableItem;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class MoveOutUtils {
     
     public static MoveOutDocResults loadMoveOutsWithDoc(File file) {
@@ -54,7 +59,10 @@ public class MoveOutUtils {
 
     public static List<MoveOut> premapping(List<MoveOut> preMoveOuts) {
 
+        List<UnsableItem> unsableItems = IrsSalesConverterApplication.getContext().getUnsableItems();
+
         UnUsableItemMapper unUsableItemMapper = new UnUsableItemMapper();
+        unUsableItemMapper.setUnsableItems(unsableItems);
 
         ArrayList<MoveOut> toRemove = new ArrayList<MoveOut>();
         ArrayList<MoveOut> toAdd = new ArrayList<MoveOut>();
@@ -78,7 +86,10 @@ public class MoveOutUtils {
 
                 if(unsableItem.isReduceOriginUnitQuantity()){
                     MoveOut rankMoveOut = findMoveOut(preMoveOuts, unsableItem.getToUseId());
-                    rankMoveOut.setQuantity(rankMoveOut.getQuantity() - newMoveOut.getQuantity());
+                    log.debug("to used unable item {}", unsableItem.getToUseId());
+                    if(rankMoveOut != null) {
+                        rankMoveOut.setQuantity(rankMoveOut.getQuantity() - newMoveOut.getQuantity());
+                    }
                 }
 
                 toAdd.add(newMoveOut);

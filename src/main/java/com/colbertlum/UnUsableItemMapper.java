@@ -63,27 +63,11 @@ public class UnUsableItemMapper {
         return foundItems;
     }
 
-    public UnUsableItemMapper(){
-        unsableItems = new ArrayList<UnsableItem>();
-        
-        try {
-            File file = new File(IrsSalesConverterApplication.getProperty(IrsSalesConverterApplication.UNSABLE_ITEM));
-            XSSFReader xssfReader = new XSSFReader(OPCPackage.open(file));
-            UnUsableItemContentHandler contentHandler = new UnUsableItemContentHandler(xssfReader.getSharedStringsTable(), xssfReader.getStylesTable(), unsableItems);
-            XMLReader XMLReader = XMLHelper.newXMLReader();
-            XMLReader.setContentHandler(contentHandler);
-            InputSource inputSource = new InputSource(xssfReader.getSheetsData().next());
-            XMLReader.parse(inputSource);
+    public void setUnsableItems(List<UnsableItem> unsableItems) {
+        this.unsableItems = unsableItems;
+    }
 
-        } catch (IOException | OpenXML4JException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (SAXException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+    public UnUsableItemMapper(){
+        // unsableItems = new ArrayList<UnsableItem>();
     }
 }

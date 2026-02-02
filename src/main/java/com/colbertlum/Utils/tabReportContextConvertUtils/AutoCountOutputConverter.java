@@ -1,18 +1,28 @@
-package com.colbertlum.Utils;
+package com.colbertlum.Utils.tabReportContextConvertUtils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.colbertlum.entity.AutoCountOutputMoveOut;
+import com.colbertlum.IrsSalesConverterApplication;
+import com.colbertlum.Utils.UOMUtils;
 import com.colbertlum.entity.AutoCountOutputResult;
 import com.colbertlum.entity.DocSalesConverterResult;
 import com.colbertlum.entity.MoveOut;
 import com.colbertlum.entity.MoveOutDocResultGroupByDate;
 import com.colbertlum.entity.MoveOutDocResults;
+import com.colbertlum.entity.UOM;
+import com.colbertlum.entity.tabReportContext.AutoCountOutputMoveOut;
 
 public class AutoCountOutputConverter {
+
+    private static List<UOM> uoms;
+
+    {
+        uoms = IrsSalesConverterApplication.getContext().getUom();
+    }
+
 
     public static AutoCountOutputResult converting(DocSalesConverterResult docResults) {
         AutoCountOutputResult acResult = new AutoCountOutputResult();
@@ -56,7 +66,10 @@ public class AutoCountOutputConverter {
         List<AutoCountOutputMoveOut> list = new ArrayList<AutoCountOutputMoveOut>();
         for(MoveOut moveOut : moveOuts) {
             AutoCountOutputMoveOut acMoveOut = new AutoCountOutputMoveOut();
-            acMoveOut.setId(moveOut.getProductId() + " (" + moveOut.getUom() + ")");
+            
+            acMoveOut.setId(UOMUtils.hasMutliUom(uoms, moveOut.getProductId())
+                ? moveOut.getProductId() + " (" + moveOut.getUom() + ")"
+                : moveOut.getProductId());
             acMoveOut.setName(moveOut.getProductName());
             acMoveOut.setPrice(moveOut.getTotalAmount() / moveOut.getQuantity());
             acMoveOut.setQuantity(moveOut.getQuantity());

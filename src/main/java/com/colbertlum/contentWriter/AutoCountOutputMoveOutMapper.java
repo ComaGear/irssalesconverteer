@@ -3,7 +3,7 @@ package com.colbertlum.contentWriter;
 import java.util.List;
 
 import com.colbertlum.contentHandler.dataColumn.AutoCountOutputMoveOutColumn;
-import com.colbertlum.entity.AutoCountOutputMoveOut;
+import com.colbertlum.entity.tabReportContext.AutoCountOutputMoveOut;
 
 public class AutoCountOutputMoveOutMapper implements ContentHeaderMapperInterface<AutoCountOutputMoveOut> {
 

@@ -9,18 +9,24 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.colbertlum.Utils.MoveOutUtils;
 import com.colbertlum.entity.Doc;
 import com.colbertlum.entity.DocSalesConverterResult;
 import com.colbertlum.entity.MoveOut;
 import com.colbertlum.entity.MoveOutDocResultGroupByDate;
 import com.colbertlum.entity.MoveOutDocResults;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class DocSalesConverter {
 
     List<String> toExcludeDocList;
     
     public DocSalesConverterResult process(File targetFile){
         MoveOutDocResults moveOutsWithDoc = MoveOutUtils.loadMoveOutsWithDoc(targetFile);
+        log.info("getting MoveOutDocResults with doc list size of : {}, and moveOuts size of {}", 
+            moveOutsWithDoc.getDocList().size(), moveOutsWithDoc.getMoveOuts().size());
 
         List<String> excludeDoc = loadExcludeDoc();
         
@@ -31,9 +37,13 @@ public class DocSalesConverter {
 
         List<Doc> cashDocList = findCashDocFromExclude(moveOutsWithDoc.getDocList(), excludeDoc);
         List<Doc> excludedDocList = findDocFromCash(moveOutsWithDoc.getDocList(), cashDocList);
+        log.debug("found out doc size of {} for cash Doc List", cashDocList.size());
+        log.debug("found out doc size of {} for specify Doc List", excludeDoc.size());
 
         MoveOutDocResultGroupByDate groupByDate = splitDocListByDate(cashDocList);
+        log.info("split Doc list by date, has {} dates", groupByDate.getMapKeySet().size());
         MoveOutDocResultGroupByDate ExcludeDocListGroupByDate = splitDocListByDate(excludedDocList);
+        log.info("split specify list by date, has {} dates", ExcludeDocListGroupByDate.getMapKeySet().size());
 
         return new DocSalesConverterResult(groupByDate, ExcludeDocListGroupByDate, salesConverter.getUnfoundMoveOuts());
     }
